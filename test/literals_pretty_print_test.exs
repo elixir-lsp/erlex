@@ -1,9 +1,9 @@
-defmodule Erlex.Test.LiteralsPretyPrintTest do
+defmodule ErlexVendored.Test.LiteralsPretyPrintTest do
   use ExUnit.Case
 
   test "nil is parsed appropriately" do
     input = "nil"
-    pretty_printed = Erlex.pretty_print(input)
+    pretty_printed = ErlexVendored.pretty_print(input)
 
     expected_output = "nil"
     assert pretty_printed == expected_output
@@ -11,7 +11,7 @@ defmodule Erlex.Test.LiteralsPretyPrintTest do
 
   test "true is parsed appropriately" do
     input = "true"
-    pretty_printed = Erlex.pretty_print(input)
+    pretty_printed = ErlexVendored.pretty_print(input)
 
     expected_output = "true"
     assert pretty_printed == expected_output
@@ -19,7 +19,7 @@ defmodule Erlex.Test.LiteralsPretyPrintTest do
 
   test "false is parsed appropriately" do
     input = "false"
-    pretty_printed = Erlex.pretty_print(input)
+    pretty_printed = ErlexVendored.pretty_print(input)
 
     expected_output = "false"
     assert pretty_printed == expected_output
@@ -30,7 +30,7 @@ defmodule Erlex.Test.LiteralsPretyPrintTest do
     []
     """
 
-    pretty_printed = Erlex.pretty_print(input)
+    pretty_printed = ErlexVendored.pretty_print(input)
 
     expected_output = "[]"
     assert pretty_printed == expected_output
@@ -41,7 +41,7 @@ defmodule Erlex.Test.LiteralsPretyPrintTest do
     #{}
     """
 
-    pretty_printed = Erlex.pretty_print(input)
+    pretty_printed = ErlexVendored.pretty_print(input)
 
     expected_output = "%{}"
     assert pretty_printed == expected_output
@@ -52,7 +52,7 @@ defmodule Erlex.Test.LiteralsPretyPrintTest do
     {}
     """
 
-    pretty_printed = Erlex.pretty_print(input)
+    pretty_printed = ErlexVendored.pretty_print(input)
 
     expected_output = "{}"
     assert pretty_printed == expected_output
@@ -61,7 +61,7 @@ defmodule Erlex.Test.LiteralsPretyPrintTest do
   test "maps are pretty printed appropriately" do
     input = ~S"#{'halted':='true'}"
 
-    pretty_printed = Erlex.pretty_print(input)
+    pretty_printed = ErlexVendored.pretty_print(input)
 
     expected_output = "%{:halted => true}"
     assert pretty_printed == expected_output
@@ -70,7 +70,7 @@ defmodule Erlex.Test.LiteralsPretyPrintTest do
   test "structs are pretty printed appropriately" do
     input = ~S"#{'halted':='true', '__struct__':='Elixir.Plug.Conn'}"
 
-    pretty_printed = Erlex.pretty_print(input)
+    pretty_printed = ErlexVendored.pretty_print(input)
 
     expected_output = "%Plug.Conn{:halted => true}"
     assert pretty_printed == expected_output
@@ -78,7 +78,7 @@ defmodule Erlex.Test.LiteralsPretyPrintTest do
 
   test "ranges are pretty printed appropriately" do
     input = "1..5"
-    pretty_printed = Erlex.pretty_print(input)
+    pretty_printed = ErlexVendored.pretty_print(input)
 
     expected_output = "1..5"
     assert pretty_printed == expected_output
@@ -86,7 +86,7 @@ defmodule Erlex.Test.LiteralsPretyPrintTest do
 
   test "zero arg functions in contract are pretty printed appropriately" do
     input = "() -> atom()"
-    pretty_printed = Erlex.pretty_print(input)
+    pretty_printed = ErlexVendored.pretty_print(input)
 
     expected_output = "() :: atom()"
     assert pretty_printed == expected_output
@@ -94,7 +94,7 @@ defmodule Erlex.Test.LiteralsPretyPrintTest do
 
   test "empty binary is pretty printed appropriately" do
     input = "<<>>"
-    pretty_printed = Erlex.pretty_print(input)
+    pretty_printed = ErlexVendored.pretty_print(input)
 
     expected_output = "<<>>"
     assert pretty_printed == expected_output
@@ -102,7 +102,7 @@ defmodule Erlex.Test.LiteralsPretyPrintTest do
 
   test "sized binary is pretty printed appropriately" do
     input = "<<_:64>>"
-    pretty_printed = Erlex.pretty_print(input)
+    pretty_printed = ErlexVendored.pretty_print(input)
 
     expected_output = "<<_ :: 64>>"
     assert pretty_printed == expected_output
@@ -110,7 +110,7 @@ defmodule Erlex.Test.LiteralsPretyPrintTest do
 
   test "unit binary is pretty printed appropriately" do
     input = "<<_:_*12>>"
-    pretty_printed = Erlex.pretty_print(input)
+    pretty_printed = ErlexVendored.pretty_print(input)
 
     expected_output = "<<_ :: size(12)>>"
     assert pretty_printed == expected_output
@@ -118,7 +118,7 @@ defmodule Erlex.Test.LiteralsPretyPrintTest do
 
   test "sized list binary is pretty printed appropriately" do
     input = "<<_:64,_:_*8>>"
-    pretty_printed = Erlex.pretty_print(input)
+    pretty_printed = ErlexVendored.pretty_print(input)
 
     expected_output = "<<_ :: 64, _ :: size(8)>>"
     assert pretty_printed == expected_output
@@ -127,7 +127,7 @@ defmodule Erlex.Test.LiteralsPretyPrintTest do
   test "binary as first value in pattern" do
     input = "<<<_:8,_:_*1>>,'false'>"
 
-    pretty_printed = Erlex.pretty_print(input)
+    pretty_printed = ErlexVendored.pretty_print(input)
 
     assert pretty_printed == "<<_ :: 8, _ :: size(1)>>, false"
   end

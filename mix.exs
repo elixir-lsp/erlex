@@ -1,4 +1,4 @@
-defmodule Erlex.MixProject do
+defmodule ErlexVendored.MixProject do
   use Mix.Project
 
   @version "0.2.6"
@@ -6,7 +6,7 @@ defmodule Erlex.MixProject do
 
   def project do
     [
-      app: :erlex,
+      app: :erlex_vendored,
       version: @version,
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
