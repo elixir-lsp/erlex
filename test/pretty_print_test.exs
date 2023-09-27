@@ -590,4 +590,11 @@ defmodule ErlexVendored.Test.PretyPrintTest do
 
     assert pretty_printed == "(<<114, 111, 108, 101, 115, 95, 117, 115, 101, 114, 115>>)"
   end
+
+  test "keep underscore in pattern" do
+    input = "{'embed', __@3, __@4}"
+    pretty_printed = ErlexVendored.pretty_print_type(input)
+
+    assert pretty_printed == "{:embed, _, _}"
+  end
 end

@@ -547,7 +547,7 @@ defmodule ErlexVendored do
     end
   end
 
-  defp atomize(<<number>>) when is_number(number) do
+  defp atomize(<<number>>) when is_number(number) and number != 95 do
     to_string(number)
   end
 
