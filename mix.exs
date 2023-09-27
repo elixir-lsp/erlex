@@ -1,4 +1,4 @@
-defmodule Erlex.MixProject do
+defmodule ErlexVendored.MixProject do
   use Mix.Project
 
   @version "VERSION" |> File.read!() |> String.trim()
@@ -36,7 +36,7 @@ defmodule Erlex.MixProject do
   def project do
     [
       # Application
-      app: :erlex,
+      app: :erlex_vendored,
       elixir: "~> 1.6",
       # elixirc_options: [debug_info: Mix.env() in @dev_envs],
       start_permanent: Mix.env() == :prod,
