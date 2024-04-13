@@ -1,10 +1,10 @@
 [![Hex version badge](https://img.shields.io/hexpm/v/erlex.svg)](https://hex.pm/packages/erlex)
 [![Hex docs badge](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/erlex/)
 [![Total download badge](https://img.shields.io/hexpm/dt/erlex.svg)](https://hex.pm/packages/erlex)
-[![License badge](https://img.shields.io/hexpm/l/erlex.svg)](https://github.com/asummers/erlex/blob/master/LICENSE.md)
-[![Build status badge](https://img.shields.io/circleci/project/github/asummers/erlex/master.svg)](https://circleci.com/gh/asummers/erlex/tree/master)
-[![Code coverage badge](https://img.shields.io/codecov/c/github/asummers/erlex/master.svg)](https://codecov.io/gh/asummers/erlex/branch/master)
-[![Last Updated badge](https://img.shields.io/github/last-commit/asummers/erlex.svg)](https://github.com/asummers/erlex/commits/master)
+[![License badge](https://img.shields.io/hexpm/l/erlex.svg)](https://github.com/christhekeele/erlex/blob/master/LICENSE.md)
+[![Build status badge](https://img.shields.io/circleci/project/github/christhekeele/erlex/master.svg)](https://circleci.com/gh/christhekeele/erlex/tree/master)
+[![Code coverage badge](https://img.shields.io/codecov/c/github/christhekeele/erlex/master.svg)](https://codecov.io/gh/christhekeele/erlex/branch/master)
+[![Last Updated badge](https://img.shields.io/github/last-commit/christhekeele/erlex.svg)](https://github.com/christhekeele/erlex/commits/master)
 
 # Erlex
 
@@ -19,7 +19,7 @@ Elixir 1.6+.
 
 ## Changelog
 
-Check out the [Changelog](https://github.com/asummers/erlex/blob/master/CHANGELOG.md).
+Check out the [Changelog](https://github.com/christhekeele/erlex/blob/master/CHANGELOG.md).
 
 ## Installation
 
@@ -70,8 +70,8 @@ iex> Erlex.pretty_print_contract(str)
 
 ## Contributing
 
-We welcome contributions of all kinds! To get started, click [here](https://github.com/asummers/erlex/blob/master/CONTRIBUTING.md).
+We welcome contributions of all kinds! To get started, click [here](https://github.com/christhekeele/erlex/blob/master/CONTRIBUTING.md).
 
 ## Code of Conduct
 
-Be sure to read and follow the [code of conduct](https://github.com/asummers/erlex/blob/master/code-of-conduct.md).
+Be sure to read and follow the [code of conduct](https://github.com/christhekeele/erlex/blob/master/code-of-conduct.md).

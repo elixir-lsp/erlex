@@ -2,7 +2,9 @@ defmodule Erlex.MixProject do
   use Mix.Project
 
   @version "0.2.6"
-  @repo_url "https://github.com/asummers/erlex"
+  @repo_url "https://github.com/christhekeele/erlex"
+  @maintainers ["Chris Keele"]
+  @authors ["Andrew Summers"]
 
   def project do
     [
@@ -55,6 +57,7 @@ defmodule Erlex.MixProject do
       source_url: @repo_url,
       source_ref: @version,
       homepage_url: @repo_url,
+      authors: @authors,
       extras: ["CHANGELOG.md", "README.md"]
     ]
   end
@@ -69,7 +72,7 @@ defmodule Erlex.MixProject do
         "src/lexer.xrl",
         "src/parser.yrl"
       ],
-      maintainers: ["Andrew Summers"],
+      maintainers: @maintainers,
       licenses: ["Apache-2.0"],
       links: %{
         "Changelog" => "https://hexdocs.pm/erlex/changelog.html",
