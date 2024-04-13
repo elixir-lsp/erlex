@@ -29,12 +29,12 @@ mix check
 ```
 
 Steps:
-1) Fork it!
-2) Create a new branch off of master in your fork and do your work
-3) Squash your commits to a single commit. If you don't know how to do
-this, that's okay. We will work through it in pull request.
-4) Make sure any documentation has been updated and all checks are passing.
-5) Submit a pull request. Thank you! :heart:
+
+1. Fork it!
+2. Create a new branch off of master in your fork and do your work
+3. Squash your commits to a single commit. If you don't know how to do this, that's okay. We will work through it in pull request.
+4. Make sure any documentation has been updated and all checks are passing.
+5. Submit a pull request. Thank you! :heart:
 
 ## Code of Conduct
 

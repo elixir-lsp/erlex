@@ -8,6 +8,7 @@
         excluded: [
           "mix.exs",
           "_build/",
+          "deps/",
           ".git/"
         ]
       },

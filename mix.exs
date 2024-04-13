@@ -1,23 +1,47 @@
 defmodule Erlex.MixProject do
   use Mix.Project
 
-  @version "0.2.6"
-  @repo_url "https://github.com/christhekeele/erlex"
+  @version "VERSION" |> File.read!() |> String.trim()
+
+  @name "ErlEx"
+  @description "Convert Erlang style structs and error messages to equivalent Elixir."
+
   @maintainers ["Chris Keele"]
   @authors ["Andrew Summers"]
 
+  @github_url "https://github.com/christhekeele/erlex"
+  @homepage_url @github_url
+
+  @dev_envs [:dev, :test]
+
   def project do
     [
+      # Application
       app: :erlex,
-      version: @version,
       elixir: "~> 1.6",
+      elixirc_options: [debug_info: Mix.env() in @dev_envs],
       start_permanent: Mix.env() == :prod,
+      version: @version,
+      # Informational
+      name: @name,
+      description: @description,
+      source_url: @github_url,
+      homepage_url: @homepage_url,
+      # Configuration
+      aliases: aliases(),
       deps: deps(),
-      description: description(),
-      package: package(),
       docs: docs(),
-      dialyzer: dialyzer()
+      dialyzer: dialyzer(),
+      package: package(),
+      # pre 1.16 mechanism
+      preferred_cli_env: preferred_cli_env(),
+      test_coverage: test_coverage()
     ]
+  end
+
+  # post 1.16 mechanism
+  def cli do
+    [preferred_envs: preferred_cli_env()]
   end
 
   def application do
@@ -26,37 +50,101 @@ defmodule Erlex.MixProject do
     ]
   end
 
+  defp aliases do
+    [
+      ####
+      # Developer tools
+      ###
+
+      # Installation tasks
+      install: [
+        "install.rebar",
+        "install.hex",
+        "install.deps"
+      ],
+      "install.rebar": "local.rebar --force",
+      "install.hex": "local.hex --force",
+      "install.deps": "deps.get",
+
+      # Build tasks
+      build: [
+        "compile",
+        "typecheck.build-cache"
+      ],
+
+      # Clean tasks
+      clean: [
+        &clean_extra_folders/1,
+        "typecheck.clean",
+        &clean_build_folders/1
+      ],
+
+      ####
+      # Quality control tools
+      ###
+
+      # Check-all task
+      check: [
+        "test",
+        "lint"
+        # "typecheck"
+      ],
+
+      # Linting tasks
+      lint: [
+        "lint.compile",
+        "lint.deps",
+        "lint.format",
+        "lint.style"
+      ],
+      "lint.compile": "compile --force --warnings-as-errors",
+      "lint.deps": "deps.unlock --check-unused",
+      "lint.format": "format --check-formatted",
+      "lint.style": "credo --strict",
+
+      # Typecheck tasks
+      typecheck: [
+        "typecheck.run"
+      ],
+      "typecheck.build-cache": "dialyzer --plt --format dialyxir",
+      "typecheck.clean": "dialyzer.clean",
+      "typecheck.explain": "dialyzer.explain --format dialyxir",
+      "typecheck.run": "dialyzer --format dialyxir"
+    ]
+  end
+
   defp dialyzer do
     [
-      plt_add_apps: [:mix, :erts, :kernel, :stdlib],
-      flags: ["-Wunmatched_returns", "-Werror_handling", "-Wrace_conditions", "-Wno_opaque"],
-      ignore_warnings: "dialyzer.ignore_warnings.exs",
+      plt_file: {:no_warn, "priv/plts/dialyzer.plt"},
       plt_core_path: "priv/plts",
-      plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
+      flags:
+        ["-Wunmatched_returns", "-Wno_opaque", :error_handling, :underspecs] ++
+          if :erlang.system_info(:otp_release) not in ~w[25 26]c do
+            [:race_conditions]
+          else
+            []
+          end,
+      ignore_warnings: "dialyzer.ignore_warnings.exs",
+      list_unused_filters: true,
+      plt_add_apps: [:mix, :erts, :kernel, :stdlib],
+      plt_ignore_apps: []
     ]
   end
 
   defp deps do
     [
-      {:credo, "~> 1.0", only: :dev, runtime: false},
-      {:dialyxir, "1.0.0-rc.3", only: :dev, runtime: false, override: true},
-      {:ex_check, "~> 0.12.0", only: :dev, runtime: false},
-      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
+      {:credo, "~> 1.7", only: @dev_envs, runtime: false},
+      # {:dialyxir, "~> 1.4", only: @dev_envs, runtime: false, override: true}, # Transative dependency on ErlEx
+      {:ex_doc, ">= 0.0.0", only: @dev_envs, runtime: false}
     ]
-  end
-
-  defp description do
-    """
-    Convert Erlang style structs and error messages to equivalent Elixir.
-    """
   end
 
   defp docs() do
     [
       main: "readme",
-      source_url: @repo_url,
+      source_url: @github_url,
       source_ref: @version,
-      homepage_url: @repo_url,
+      homepage_url: @homepage_url,
       authors: @authors,
       extras: ["CHANGELOG.md", "README.md"]
     ]
@@ -76,8 +164,26 @@ defmodule Erlex.MixProject do
       licenses: ["Apache-2.0"],
       links: %{
         "Changelog" => "https://hexdocs.pm/erlex/changelog.html",
-        "GitHub" => @repo_url
+        "GitHub" => @github_url
       }
     ]
+  end
+
+  defp test_coverage do
+    [
+      tool: ExCoveralls
+    ]
+  end
+
+  defp preferred_cli_env do
+    aliases() |> Keyword.keys() |> Enum.map(fn alias -> {alias, :test} end)
+  end
+
+  defp clean_build_folders(_) do
+    ~w[_build deps] |> Enum.map(&File.rm_rf!/1)
+  end
+
+  defp clean_extra_folders(_) do
+    ~w[cover doc] |> Enum.map(&File.rm_rf!/1)
   end
 end
