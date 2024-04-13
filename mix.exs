@@ -2,6 +2,23 @@ defmodule Erlex.MixProject do
   use Mix.Project
 
   @version "VERSION" |> File.read!() |> String.trim()
+  @erlang_version Path.join([
+                    :code.root_dir(),
+                    "releases",
+                    :erlang.system_info(:otp_release),
+                    "OTP_VERSION"
+                  ])
+                  |> File.read!()
+                  |> String.trim()
+                  |> String.split(".")
+                  |> Stream.unfold(fn
+                    list when length(list) > 1 -> {hd(list), tl(list)}
+                    [hd] -> {hd, nil}
+                  end)
+                  |> Stream.concat(Stream.repeatedly(fn -> 0 end))
+                  |> Enum.take(3)
+                  |> Enum.join(".")
+                  |> Version.parse!()
 
   @name "ErlEx"
   @description "Convert Erlang style structs and error messages to equivalent Elixir."
@@ -119,7 +136,7 @@ defmodule Erlex.MixProject do
       plt_core_path: "priv/plts",
       flags:
         ["-Wunmatched_returns", "-Wno_opaque", :error_handling, :underspecs] ++
-          if :erlang.system_info(:otp_release) not in ~w[25 26]c do
+          if Version.match?(@erlang_version, "< 25.0.0") do
             [:race_conditions]
           else
             []
@@ -131,11 +148,11 @@ defmodule Erlex.MixProject do
     ]
   end
 
-  defp deps do
+  defp deps() do
     [
       {:credo, "~> 1.7", only: @dev_envs, runtime: false},
       # {:dialyxir, "~> 1.4", only: @dev_envs, runtime: false, override: true}, # Transative dependency on ErlEx
-      {:ex_doc, ">= 0.0.0", only: @dev_envs, runtime: false}
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]
   end
 
@@ -176,7 +193,10 @@ defmodule Erlex.MixProject do
   end
 
   defp preferred_cli_env do
-    aliases() |> Keyword.keys() |> Enum.map(fn alias -> {alias, :test} end)
+    test_by_default = aliases() |> Keyword.keys() |> Enum.map(&{&1, :test})
+    dev_overrides = ["docs", "hex.publish"] |> Enum.map(&{&1, :dev})
+
+    test_by_default ++ dev_overrides
   end
 
   defp clean_build_folders(_) do
