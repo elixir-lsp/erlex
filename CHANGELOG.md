@@ -5,9 +5,12 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 
 ## [Unreleased]
 
+### Added
+- Support for Elixir 1.16: removes new compiler warnings.
+
 ## 0.2.6 - 2020-03-09
 ### Added
-- Replace << parsing to fix nexted pattern matching binary bugs discovered from Phoenix 1.4.15.
+- Replace << parsing to fix nested pattern matching binary bugs discovered from Phoenix 1.4.15.
 
 ## 0.2.5 - 2019-09-19
 ### Added
@@ -67,7 +70,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Initial functionality and tests
 
 [Unreleased]: https://github.com/asummers/erlex/compare/v0.2.1...HEAD
-[0.2.0...0.2.1]: https://github.com/asummers/erlex/compare/v0.2.0...v0.2.1
+[0.2.0...0.2.1]: https://github.com/christhekeele/erlex/compare/v0.2.0...v0.2.1
 [0.1.6...0.2.0]: https://github.com/asummers/erlex/compare/v0.1.6...v0.2.0
 [0.1.5...0.1.6]: https://github.com/asummers/erlex/compare/v0.1.5...v0.1.6
 [0.1.4...0.1.5]: https://github.com/asummers/erlex/compare/v0.1.4...v0.1.5
