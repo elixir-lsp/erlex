@@ -154,19 +154,19 @@ defmodule Erlex.MixProject do
       # {:dialyxir, "~> 1.4", only: @dev_envs, runtime: false, override: true}, # Transative dependency on ErlEx
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ] ++ deps(:credo)
+  end
+
+  defp deps(:credo) do
+    cond do
+      Version.match?(@elixir_version, "< 1.7.0") ->
+        [{:credo, "< 1.5.0", only: @dev_envs, runtime: false}]
+
+      Version.match?(@elixir_version, "< 1.10.0") ->
+        [{:credo, "< 1.7.0", only: @dev_envs, runtime: false}]
+
+      true ->
+        [{:credo, "~> 1.7", only: @dev_envs, runtime: false}]
     end
-
-    defp deps(:credo) do
-      cond do
-        Version.match?(@elixir_version, "< 1.7.0") ->
-          [{:credo, "< 1.5.0", only: @dev_envs, runtime: false}]
-
-        Version.match?(@elixir_version, "< 1.10.0") ->
-          [{:credo, "< 1.7.0", only: @dev_envs, runtime: false}]
-
-        true ->
-          [{:credo, "~> 1.7", only: @dev_envs, runtime: false}]
-      end
   end
 
   defp docs() do
