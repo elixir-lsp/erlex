@@ -565,7 +565,7 @@ defmodule Erlex do
     end
   end
 
-  defp atomize(<<number>>) when is_number(number) do
+  defp atomize(<<number>>) when is_number(number) and number != ?_ do
     to_string(number)
   end
 
