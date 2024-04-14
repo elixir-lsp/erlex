@@ -10,6 +10,14 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 
 - Support for Elixir 1.16: removes new compiler warnings.
 
+### Changed
+
+- Parser and lexer modules renamed with `erlex_` prefix to avoid conflict with similarly named modules.
+
+### Fixed
+
+- Lone `_` variables in patterns
+
 ## 0.2.6 - 2020-03-09
 
 ### Added
