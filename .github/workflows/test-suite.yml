@@ -1,7 +1,10 @@
 name: Test ❯ Suite
+# Runs tests, typechecking, and linting.
 
 on:
+  # Allow running from GitHub UI.
   - workflow_dispatch
+  # Run on all pushes.
   - push
 
 env:
@@ -146,7 +149,7 @@ jobs:
         continue-on-error: true
 
   results:
-    name: Test Suites Action Results
+    name: Test Suite Results
     runs-on: ubuntu-20.04
 
     if: ${{ always() }}

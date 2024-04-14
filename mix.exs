@@ -128,7 +128,11 @@ defmodule Erlex.MixProject do
       "typecheck.build-cache": "dialyzer --plt --format dialyxir",
       "typecheck.clean": "dialyzer.clean",
       "typecheck.explain": "dialyzer.explain --format dialyxir",
-      "typecheck.run": "dialyzer --format dialyxir"
+      "typecheck.run": "dialyzer --format dialyxir",
+
+      # Test tasks
+      "test.coverage": "coveralls",
+      "test.coverage.report": "coveralls.github"
     ]
   end
 
@@ -153,6 +157,7 @@ defmodule Erlex.MixProject do
   defp deps() do
     [
       # {:dialyxir, "~> 1.4", only: @dev_envs, runtime: false, override: true}, # Transative dependency on ErlEx
+      {:excoveralls, "~> 0.18", only: :test},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ] ++ deps(:credo)
   end

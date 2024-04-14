@@ -1,17 +1,22 @@
 name: Test ❯ Matrix
+# Runs tests and typechecking against the full battalion
+# of supported OS, Erlang/OTP, and Elixir versions.
 
 on:
+  # Allow running from GitHub UI.
   workflow_dispatch: {}
 
+  # Run on all pull requests to important branches.
   pull_request:
     branches:
       - latest
       - release
 
+  # Run on all pushes to important branches.
   push:
     branches:
-      - release
       - latest
+      - release
 
 env:
   MIX_ENV: test
@@ -418,8 +423,46 @@ jobs:
           elixir-version: ${{ matrix.elixir }}
           otp-version: ${{ matrix.otp }}
 
+      - name: Restore mix dependency installation cache
+        id: mix-deps-get-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            deps
+            mix.lock
+          key: cache-${{ vars.CACHE_VERSION }}-os-${{ runner.os }}-${{ steps.beam-versions.outputs.otp-version }}-${{ steps.beam-versions.outputs.elixir-version }}-mix-deps-get-mix-exs-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.exs')) }}
+
+      - name: Install mix dependencies
+        if: steps.mix-deps-get-cache.outputs.cache-hit != 'true'
+        run: mix deps.get
+
+      - name: Restore mix dependency compilation cache
+        id: mix-deps-compile-cache
+        uses: actions/cache@v4
+        with:
+          path: _build
+          key: cache-${{ vars.CACHE_VERSION }}-os-${{ runner.os }}-${{ steps.beam-versions.outputs.otp-version }}-${{ steps.beam-versions.outputs.elixir-version }}-mix-deps-compile-mix-lock-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+
+      - name: Compile mix dependencies
+        if: steps.mix-deps-compile-cache.outputs.cache-hit != 'true'
+        run: mix deps.compile
+
+      - name: Restore mix typecheck cache
+        id: mix-typecheck-cache
+        uses: actions/cache@v4
+        with:
+          path: priv/plts
+          key: cache-${{ vars.CACHE_VERSION }}-os-${{ runner.os }}-${{ steps.beam-versions.outputs.otp-version }}-${{ steps.beam-versions.outputs.elixir-version }}-mix-typecheck
+
+      - name: Setup typechecking
+        if: steps.mix-typecheck-cache.outputs.cache-hit != 'true'
+        run: mix typecheck.build-cache
+
+      - name: Run typecheck tasks
+        run: mix typecheck
+
   results:
-    name: Test Matrix Action Results
+    name: Test Matrix Results
     runs-on: ubuntu-22.04
 
     if: ${{ always() }}
