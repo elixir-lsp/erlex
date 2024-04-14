@@ -2,6 +2,7 @@ defmodule Erlex.MixProject do
   use Mix.Project
 
   @version "VERSION" |> File.read!() |> String.trim()
+  @elixir_version System.version() |> Version.parse!()
   @erlang_version Path.join([
                     :code.root_dir(),
                     "releases",
@@ -12,8 +13,8 @@ defmodule Erlex.MixProject do
                   |> String.trim()
                   |> String.split(".")
                   |> Stream.unfold(fn
-                    list when length(list) > 1 -> {hd(list), tl(list)}
-                    [hd] -> {hd, nil}
+                    [] -> nil
+                    [head | tail] -> {head, tail}
                   end)
                   |> Stream.concat(Stream.repeatedly(fn -> 0 end))
                   |> Enum.take(3)
@@ -150,10 +151,22 @@ defmodule Erlex.MixProject do
 
   defp deps() do
     [
-      {:credo, "~> 1.7", only: @dev_envs, runtime: false},
       # {:dialyxir, "~> 1.4", only: @dev_envs, runtime: false, override: true}, # Transative dependency on ErlEx
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
-    ]
+    ] ++ deps(:credo)
+    end
+
+    defp deps(:credo) do
+      cond do
+        Version.match?(@elixir_version, "< 1.7.0") ->
+          [{:credo, "< 1.5.0", only: @dev_envs, runtime: false}]
+
+        Version.match?(@elixir_version, "< 1.10.0") ->
+          [{:credo, "< 1.7.0", only: @dev_envs, runtime: false}]
+
+        true ->
+          [{:credo, "~> 1.7", only: @dev_envs, runtime: false}]
+      end
   end
 
   defp docs() do

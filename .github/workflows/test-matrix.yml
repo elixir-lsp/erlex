@@ -17,7 +17,7 @@ on:
 env:
   preferred-elixir: "1.16.x"
   preferred-otp: "26.x"
-  cache-version: 2
+  cache-version: 4
   MIX_ENV: test
 
 concurrency:
@@ -46,10 +46,13 @@ jobs:
         include:
           ####
           # Additional version combinations we want to check
-          ##
           #  See: https://github.com/elixir-lang/elixir/blob/main/lib/elixir/pages/compatibility-and-deprecations.md#compatibility-between-elixir-and-erlangotp
-          # Project was originally only tested on Elixir 1.10-1.11, OTP 22-23, so we cover back to then
-          #  See: https://github.com/asummers/erlex/blob/master/.github/workflows/pulls.yml#L11-L12
+          # Project was originally only tested on Elixir 1.10-1.11, OTP 22-23, so we should test back to then until a breaking release
+          #  See: https://github.com/asummers/erlex/blob/0548765838a08583c83d72d208fde112104a3d2b/.github/workflows/pulls.yml#L11-L12
+          # Project was originally claiming it supports back to Elixir 1.6, so we should test back to then until a breaking release
+          #  See: https://github.com/asummers/erlex/blob/master/mix.exs#L11
+          ##
+          
           # OTP 26+ requires ubuntu-22+
           - elixir: "1.14.x"
             otp: "26.x"
@@ -151,11 +154,12 @@ jobs:
             os: "ubuntu-20.04"
             type: required
           # Elixir 1.7 supports OTP 19-22
-          #  Note that OTP < 20 requires ubuntu-18.04
-          - elixir: "1.7.x"
-            otp: "19.x"
-            os: "ubuntu-18.04"
-            type: required
+          #  Note that OTP < 20 requires ubuntu-18.04, which is no longer supported by GitHub actions,
+          #  so we skip it
+          # - elixir: "1.7.x"
+          #   otp: "19.x"
+          #   os: "ubuntu-18.04"
+          #   type: required
           - elixir: "1.7.x"
             otp: "20.x"
             os: "ubuntu-20.04"
@@ -169,11 +173,12 @@ jobs:
             os: "ubuntu-20.04"
             type: required
           # Elixir 1.6 supports OTP 19-21
-          #  Note that OTP < 20 requires ubuntu-18.04
-          - elixir: "1.6.x"
-            otp: "19.x"
-            os: "ubuntu-18.04"
-            type: required
+          #  Note that OTP < 20 requires ubuntu-18.04, which is no longer supported by GitHub actions,
+          #  so we skip it
+          # - elixir: "1.6.x"
+          #   otp: "19.x"
+          #   os: "ubuntu-18.04"
+          #   type: required
           - elixir: "1.6.x"
             otp: "20.x"
             os: "ubuntu-20.04"
@@ -240,10 +245,13 @@ jobs:
         include:
           ####
           # Additional version combinations we want to check
-          ##
           #  See: https://github.com/elixir-lang/elixir/blob/main/lib/elixir/pages/compatibility-and-deprecations.md#compatibility-between-elixir-and-erlangotp
-          # Project was originally only tested on Elixir 1.10-1.11, OTP 22-23, so we cover back to then
-          #  See: https://github.com/asummers/erlex/blob/master/.github/workflows/pulls.yml#L11-L12
+          # Project was originally only tested on Elixir 1.10-1.11, OTP 22-23, so we should test back to then until a breaking release
+          #  See: https://github.com/asummers/erlex/blob/0548765838a08583c83d72d208fde112104a3d2b/.github/workflows/pulls.yml#L11-L12
+          # Project was originally claiming it supports back to Elixir 1.6, so we should test back to then until a breaking release
+          #  See: https://github.com/asummers/erlex/blob/master/mix.exs#L11
+          ##
+          
           # OTP 26+ requires ubuntu-22+
           - elixir: "1.14.x"
             otp: "26.x"
@@ -345,11 +353,12 @@ jobs:
             os: "ubuntu-20.04"
             type: required
           # Elixir 1.7 supports OTP 19-22
-          #  Note that OTP < 20 requires ubuntu-18.04
-          - elixir: "1.7.x"
-            otp: "19.x"
-            os: "ubuntu-18.04"
-            type: required
+          #  Note that OTP < 20 requires ubuntu-18.04, which is no longer supported by GitHub actions,
+          #  so we skip it
+          # - elixir: "1.7.x"
+          #   otp: "19.x"
+          #   os: "ubuntu-18.04"
+          #   type: required
           - elixir: "1.7.x"
             otp: "20.x"
             os: "ubuntu-20.04"
@@ -363,11 +372,12 @@ jobs:
             os: "ubuntu-20.04"
             type: required
           # Elixir 1.6 supports OTP 19-21
-          #  Note that OTP < 20 requires ubuntu-18.04
-          - elixir: "1.6.x"
-            otp: "19.x"
-            os: "ubuntu-18.04"
-            type: required
+          #  Note that OTP < 20 requires ubuntu-18.04, which is no longer supported by GitHub actions,
+          #  so we skip it
+          # - elixir: "1.6.x"
+          #   otp: "19.x"
+          #   os: "ubuntu-18.04"
+          #   type: required
           - elixir: "1.6.x"
             otp: "20.x"
             os: "ubuntu-20.04"
@@ -428,7 +438,7 @@ jobs:
 
   results:
     name: Test Matrix Action Results
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     if: ${{ always() }}
     needs:
