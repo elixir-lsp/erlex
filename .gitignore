@@ -11,3 +11,4 @@ src/parser.erl
 src/lexer.erl
 
 /priv/plts/
+mix.lock
