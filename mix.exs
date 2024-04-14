@@ -39,6 +39,7 @@ defmodule Erlex.MixProject do
       elixir: "~> 1.6",
       elixirc_options: [debug_info: Mix.env() in @dev_envs],
       start_permanent: Mix.env() == :prod,
+      compilers: [:leex, :yecc] ++ Mix.compilers(),
       version: @version,
       # Informational
       name: @name,
@@ -51,13 +52,13 @@ defmodule Erlex.MixProject do
       docs: docs(),
       dialyzer: dialyzer(),
       package: package(),
-      # pre 1.16 mechanism
+      # pre 1.16 cli env mechanism
       preferred_cli_env: preferred_cli_env(),
       test_coverage: test_coverage()
     ]
   end
 
-  # post 1.16 mechanism
+  # post 1.16 cli env mechanism
   def cli do
     [preferred_envs: preferred_cli_env()]
   end
