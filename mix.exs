@@ -21,7 +21,7 @@ defmodule Erlex.MixProject do
                   |> Enum.join(".")
                   |> Version.parse!()
 
-  @name "ErlEx"
+  @name "Erlex"
   @description "Convert Erlang style structs and error messages to equivalent Elixir."
 
   @maintainers ["Chris Keele"]
