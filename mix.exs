@@ -193,8 +193,8 @@ defmodule Erlex.MixProject do
         "mix.exs",
         "README.md",
         "LICENSE.md",
-        "src/lexer.xrl",
-        "src/parser.yrl"
+        "src/erlex_lexer.xrl",
+        "src/erlex_parser.yrl"
       ],
       maintainers: @maintainers,
       licenses: ["Apache-2.0"],
