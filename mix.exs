@@ -3,23 +3,24 @@ defmodule Erlex.MixProject do
 
   @version "VERSION" |> File.read!() |> String.trim()
   @elixir_version System.version() |> Version.parse!()
-  @erlang_version Path.join([
-                    :code.root_dir(),
-                    "releases",
-                    :erlang.system_info(:otp_release),
-                    "OTP_VERSION"
-                  ])
-                  |> File.read!()
-                  |> String.trim()
-                  |> String.split(".")
-                  |> Stream.unfold(fn
-                    [] -> nil
-                    [head | tail] -> {head, tail}
-                  end)
-                  |> Stream.concat(Stream.repeatedly(fn -> 0 end))
-                  |> Enum.take(3)
-                  |> Enum.join(".")
-                  |> Version.parse!()
+  @erlang_version :erlang.system_info(:otp_release) |> List.to_string() |> String.to_integer()
+  # Path.join([
+  #   :code.root_dir(),
+  #   "releases",
+  #   :erlang.system_info(:otp_release),
+  #   "OTP_VERSION"
+  # ])
+  # |> File.read!()
+  # |> String.trim()
+  # |> String.split(".")
+  # |> Stream.unfold(fn
+  #   [] -> nil
+  #   [head | tail] -> {head, tail}
+  # end)
+  # |> Stream.concat(Stream.repeatedly(fn -> 0 end))
+  # |> Enum.take(3)
+  # |> Enum.join(".")
+  # |> Version.parse!()
 
   @name "Erlex"
   @description "Convert Erlang style structs and error messages to equivalent Elixir."
@@ -142,7 +143,7 @@ defmodule Erlex.MixProject do
       plt_core_path: "priv/plts",
       flags:
         ["-Wunmatched_returns", "-Wno_opaque", :error_handling, :underspecs] ++
-          if Version.match?(@erlang_version, "< 25.0.0") do
+          if @erlang_version < 25 do
             [:race_conditions]
           else
             []
