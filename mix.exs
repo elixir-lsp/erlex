@@ -194,6 +194,7 @@ defmodule Erlex.MixProject do
         "mix.exs",
         "README.md",
         "LICENSE.md",
+        "VERSION",
         "src/erlex_lexer.xrl",
         "src/erlex_parser.yrl"
       ],
