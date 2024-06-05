@@ -38,7 +38,7 @@ defmodule Erlex.MixProject do
       # Application
       app: :erlex,
       elixir: "~> 1.6",
-      elixirc_options: [debug_info: Mix.env() in @dev_envs],
+      # elixirc_options: [debug_info: Mix.env() in @dev_envs],
       start_permanent: Mix.env() == :prod,
       compilers: [:leex, :yecc] ++ Mix.compilers(),
       version: @version,
