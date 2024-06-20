@@ -171,8 +171,11 @@ defmodule Erlex.MixProject do
       Version.match?(@elixir_version, "< 1.10.0") ->
         [{:credo, "< 1.7.0", only: @dev_envs, runtime: false}]
 
+      Version.match?(@elixir_version, "< 1.13.0") ->
+        [{:credo, "< 1.7.7", only: @dev_envs, runtime: false}]
+
       true ->
-        [{:credo, ">= 1.7.0", only: @dev_envs, runtime: false}]
+        [{:credo, ">= 1.7.7", only: @dev_envs, runtime: false}]
     end
   end
 
