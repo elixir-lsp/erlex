@@ -4,5 +4,5 @@
   {"lib/erlex.ex", :no_return, 139},
   {"lib/erlex.ex", :no_return, 149},
   {"lib/erlex.ex", :no_return, 168},
-  {"lib/erlex.ex", :no_return, 189},
+  {"lib/erlex.ex", :no_return, 189}
 ]

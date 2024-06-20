@@ -1,0 +1,86 @@
+name: Test ❯ Status
+# Runs tests with coverage and updates related systems.
+
+on:
+  # Allow running from GitHub UI.
+  workflow_dispatch: {}
+
+  # Update status on all pull requests to important branches.
+  push:
+    branches:
+      - latest
+      - release
+
+  # Update status on all pushes to important branches.
+  pull_request:
+    branches:
+      - latest
+      - release
+
+env:
+  MIX_ENV: test
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+concurrency:
+  group: test-status-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  status:
+    if: github.event_name == 'push' || github.event.pull_request_target.merged == true
+    name: Reporting Test Suite Status
+    runs-on: ${{ vars.PREFERRED_OS }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Erlang & Elixir
+        id: beam-versions
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{ vars.PREFERRED_ELIXIR }}
+          otp-version: ${{ vars.PREFERRED_OTP }}
+
+      - name: Restore mix dependency installation cache
+        id: mix-deps-get-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            deps
+            mix.lock
+          key: cache-${{ vars.CACHE_VERSION }}-os-${{ runner.os }}-otp-${{ steps.beam-versions.outputs.otp-version }}-elixir-${{ steps.beam-versions.outputs.elixir-version }}-env-${{ env.MIX_ENV }}-mix-deps-get-mix-exs-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.exs')) }}
+
+      - name: Install mix dependencies
+        if: steps.mix-deps-get-cache.outputs.cache-hit != 'true'
+        run: mix deps.get
+
+      - name: Restore mix dependency compilation cache
+        id: mix-deps-compile-cache
+        uses: actions/cache@v4
+        with:
+          path: _build
+          key: cache-${{ vars.CACHE_VERSION }}-os-${{ runner.os }}-otp-${{ steps.beam-versions.outputs.otp-version }}-elixir-${{ steps.beam-versions.outputs.elixir-version }}-env-${{ env.MIX_ENV }}-mix-deps-compile-mix-lock-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+
+      - name: Compile mix dependencies
+        if: steps.mix-deps-compile-cache.outputs.cache-hit != 'true'
+        run: mix deps.compile
+
+      - name: Report test suite coverage
+        run: mix test.coverage.report
+
+  results:
+    name: Test Status Results
+    runs-on: ${{ vars.PREFERRED_OS }}
+
+    if: ${{ always() }}
+    needs:
+      - status
+
+    steps:
+      - name: Test Status Succeeded
+        if: ${{ needs.status.result == 'success' }}
+        run: exit 0
+
+      - name: Test Status Failed
+        if: ${{ needs.status.result == 'failure' }}
+        run: exit 1

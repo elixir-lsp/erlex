@@ -1,0 +1,480 @@
+name: Test ❯ Matrix
+# Runs tests and typechecking against the full battalion
+# of supported OS, Erlang/OTP, and Elixir versions.
+
+on:
+  # Allow running from GitHub UI.
+  workflow_dispatch: {}
+
+  # Run on all pull requests to important branches.
+  pull_request:
+    branches:
+      - latest
+      - release
+
+  # Run on all pushes to important branches.
+  push:
+    branches:
+      - latest
+      - release
+
+env:
+  MIX_ENV: test
+
+concurrency:
+  group: test-matrix-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: Testing Matrix
+    runs-on: ${{ matrix.os }}
+
+    continue-on-error: ${{ matrix.type == 'optional' }}
+    strategy:
+      matrix:
+        os:
+          - "ubuntu-20.04"
+          - "windows-2019"
+          - "windows-2022"
+        elixir:
+          - "1.14.x"
+          - "1.15.x"
+          - "1.16.x"
+        otp:
+          - "24.x"
+          - "25.x"
+          # - "26.x" # Requires ubuntu-22.04
+        type: [required]
+        include:
+          ####
+          # Additional version combinations we want to check
+          #  See: https://github.com/elixir-lang/elixir/blob/main/lib/elixir/pages/compatibility-and-deprecations.md#compatibility-between-elixir-and-erlangotp
+          # Project was originally only tested on Elixir 1.10-1.11, OTP 22-23, so we should test back to then until a breaking release
+          #  See: https://github.com/asummers/erlex/blob/0548765838a08583c83d72d208fde112104a3d2b/.github/workflows/pulls.yml#L11-L12
+          # Project was originally claiming it supports back to Elixir 1.6, so we should test back to then until a breaking release
+          #  See: https://github.com/asummers/erlex/blob/master/mix.exs#L11
+          ##
+
+          # OTP 26+ requires ubuntu-22+
+          - elixir: "1.14.x"
+            otp: "26.x"
+            os: "ubuntu-22.04"
+            type: required
+          - elixir: "1.15.x"
+            otp: "26.x"
+            os: "ubuntu-22.04"
+            type: required
+          - elixir: "1.16.x"
+            otp: "26.x"
+            os: "ubuntu-22.04"
+            type: required
+
+          # Elixir 1.14 also supports OTP 23
+          - elixir: "1.14.x"
+            otp: "23.x"
+            os: "ubuntu-20.04"
+            type: required
+
+          # Elixir 1.13 supports OTP 22-25
+          - elixir: "1.13.x"
+            otp: "22.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.13.x"
+            otp: "23.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.13.x"
+            otp: "24.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.13.x"
+            otp: "25.x"
+            os: "ubuntu-20.04"
+            type: required
+
+          # Elixir 1.12 supports OTP 22-24
+          - elixir: "1.12.x"
+            otp: "22.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.12.x"
+            otp: "23.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.12.x"
+            otp: "24.x"
+            os: "ubuntu-20.04"
+            type: required
+
+          # Elixir 1.11 supports OTP 21-23
+          - elixir: "1.11.x"
+            otp: "21.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.11.x"
+            otp: "22.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.11.x"
+            otp: "23.x"
+            os: "ubuntu-20.04"
+            type: required
+
+          # Elixir 1.10 supports OTP 21-23
+          - elixir: "1.10.x"
+            otp: "21.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.10.x"
+            otp: "22.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.10.x"
+            otp: "23.x"
+            os: "ubuntu-20.04"
+            type: required
+
+          # Elixir 1.9 supports OTP 20-22
+          - elixir: "1.9.x"
+            otp: "20.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.9.x"
+            otp: "21.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.9.x"
+            otp: "22.x"
+            os: "ubuntu-20.04"
+            type: required
+
+          # Elixir 1.8 supports OTP 20-22
+          - elixir: "1.8.x"
+            otp: "20.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.8.x"
+            otp: "21.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.8.x"
+            otp: "22.x"
+            os: "ubuntu-20.04"
+            type: required
+
+          # Elixir 1.7 supports OTP 19-22
+          #  Note that OTP < 20 requires ubuntu-18.04, which is no longer supported by GitHub actions,
+          #  so we skip it
+          # - elixir: "1.7.x"
+          #   otp: "19.x"
+          #   os: "ubuntu-18.04"
+          #   type: required
+          - elixir: "1.7.x"
+            otp: "20.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.7.x"
+            otp: "21.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.7.x"
+            otp: "22.x"
+            os: "ubuntu-20.04"
+            type: required
+
+          # Elixir 1.6 supports OTP 19-21
+          #  Note that OTP < 20 requires ubuntu-18.04, which is no longer supported by GitHub actions,
+          #  so we skip it
+          # - elixir: "1.6.x"
+          #   otp: "19.x"
+          #   os: "ubuntu-18.04"
+          #   type: required
+          - elixir: "1.6.x"
+            otp: "20.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.6.x"
+            otp: "21.x"
+            os: "ubuntu-20.04"
+            type: required
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Erlang & Elixir
+        id: beam-versions
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{ matrix.elixir }}
+          otp-version: ${{ matrix.otp }}
+
+      - name: Restore mix dependency installation cache
+        id: mix-deps-get-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            deps
+            mix.lock
+          key: cache-${{ vars.CACHE_VERSION }}-os-${{ runner.os }}-${{ steps.beam-versions.outputs.otp-version }}-${{ steps.beam-versions.outputs.elixir-version }}-mix-deps-get-mix-exs-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.exs')) }}
+
+      - name: Install mix dependencies
+        if: steps.mix-deps-get-cache.outputs.cache-hit != 'true'
+        run: mix deps.get
+
+      - name: Restore mix dependency compilation cache
+        id: mix-deps-compile-cache
+        uses: actions/cache@v4
+        with:
+          path: _build
+          key: cache-${{ vars.CACHE_VERSION }}-os-${{ runner.os }}-otp-${{ steps.beam-versions.outputs.otp-version }}-elixir-${{ steps.beam-versions.outputs.elixir-version }}-env-${{ env.MIX_ENV }}-mix-deps-compile-mix-lock-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+
+      - name: Compile mix dependencies
+        if: steps.mix-deps-compile-cache.outputs.cache-hit != 'true'
+        run: mix deps.compile
+
+      - name: Run test suite
+        run: mix test
+
+  types:
+    # Skip type checking for now
+    if: ${{ !always() }}
+    name: Typechecking Matrix
+    runs-on: ${{ matrix.os }}
+
+    continue-on-error: ${{ matrix.type == 'optional' }}
+    strategy:
+      matrix:
+        os:
+          - "ubuntu-20.04"
+          - "windows-2019"
+          - "windows-2022"
+        elixir:
+          - "1.14.x"
+          - "1.15.x"
+          - "1.16.x"
+        otp:
+          - "24.x"
+          - "25.x"
+          # - "26.x" # Requires ubuntu-22.04
+        type: [required]
+        include:
+          ####
+          # Additional version combinations we want to check
+          #  See: https://github.com/elixir-lang/elixir/blob/main/lib/elixir/pages/compatibility-and-deprecations.md#compatibility-between-elixir-and-erlangotp
+          # Project was originally only tested on Elixir 1.10-1.11, OTP 22-23, so we should test back to then until a breaking release
+          #  See: https://github.com/asummers/erlex/blob/0548765838a08583c83d72d208fde112104a3d2b/.github/workflows/pulls.yml#L11-L12
+          # Project was originally claiming it supports back to Elixir 1.6, so we should test back to then until a breaking release
+          #  See: https://github.com/asummers/erlex/blob/master/mix.exs#L11
+          ##
+
+          # OTP 26+ requires ubuntu-22+
+          - elixir: "1.14.x"
+            otp: "26.x"
+            os: "ubuntu-22.04"
+            type: required
+          - elixir: "1.15.x"
+            otp: "26.x"
+            os: "ubuntu-22.04"
+            type: required
+          - elixir: "1.16.x"
+            otp: "26.x"
+            os: "ubuntu-22.04"
+            type: required
+
+          # Elixir 1.14 also supports OTP 23
+          - elixir: "1.14.x"
+            otp: "23.x"
+            os: "ubuntu-20.04"
+            type: required
+
+          # Elixir 1.13 supports OTP 22-25
+          - elixir: "1.13.x"
+            otp: "22.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.13.x"
+            otp: "23.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.13.x"
+            otp: "24.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.13.x"
+            otp: "25.x"
+            os: "ubuntu-20.04"
+            type: required
+
+          # Elixir 1.12 supports OTP 22-24
+          - elixir: "1.12.x"
+            otp: "22.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.12.x"
+            otp: "23.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.12.x"
+            otp: "24.x"
+            os: "ubuntu-20.04"
+            type: required
+
+          # Elixir 1.11 supports OTP 21-23
+          - elixir: "1.11.x"
+            otp: "21.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.11.x"
+            otp: "22.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.11.x"
+            otp: "23.x"
+            os: "ubuntu-20.04"
+            type: required
+
+          # Elixir 1.10 supports OTP 21-23
+          - elixir: "1.10.x"
+            otp: "21.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.10.x"
+            otp: "22.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.10.x"
+            otp: "23.x"
+            os: "ubuntu-20.04"
+            type: required
+
+          # Elixir 1.9 supports OTP 20-22
+          - elixir: "1.9.x"
+            otp: "20.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.9.x"
+            otp: "21.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.9.x"
+            otp: "22.x"
+            os: "ubuntu-20.04"
+            type: required
+
+          # Elixir 1.8 supports OTP 20-22
+          - elixir: "1.8.x"
+            otp: "20.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.8.x"
+            otp: "21.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.8.x"
+            otp: "22.x"
+            os: "ubuntu-20.04"
+            type: required
+
+          # Elixir 1.7 supports OTP 19-22
+          #  Note that OTP < 20 requires ubuntu-18.04, which is no longer supported by GitHub actions,
+          #  so we skip it
+          # - elixir: "1.7.x"
+          #   otp: "19.x"
+          #   os: "ubuntu-18.04"
+          #   type: required
+          - elixir: "1.7.x"
+            otp: "20.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.7.x"
+            otp: "21.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.7.x"
+            otp: "22.x"
+            os: "ubuntu-20.04"
+            type: required
+
+          # Elixir 1.6 supports OTP 19-21
+          #  Note that OTP < 20 requires ubuntu-18.04, which is no longer supported by GitHub actions,
+          #  so we skip it
+          # - elixir: "1.6.x"
+          #   otp: "19.x"
+          #   os: "ubuntu-18.04"
+          #   type: required
+          - elixir: "1.6.x"
+            otp: "20.x"
+            os: "ubuntu-20.04"
+            type: required
+          - elixir: "1.6.x"
+            otp: "21.x"
+            os: "ubuntu-20.04"
+            type: required
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Erlang & Elixir
+        id: beam-versions
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{ matrix.elixir }}
+          otp-version: ${{ matrix.otp }}
+
+      - name: Restore mix dependency installation cache
+        id: mix-deps-get-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            deps
+            mix.lock
+          key: cache-${{ vars.CACHE_VERSION }}-os-${{ runner.os }}-otp-${{ steps.beam-versions.outputs.otp-version }}-elixir-${{ steps.beam-versions.outputs.elixir-version }}-env-${{ env.MIX_ENV }}-mix-deps-get-mix-exs-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.exs')) }}
+
+      - name: Install mix dependencies
+        if: steps.mix-deps-get-cache.outputs.cache-hit != 'true'
+        run: mix deps.get
+
+      - name: Restore mix dependency compilation cache
+        id: mix-deps-compile-cache
+        uses: actions/cache@v4
+        with:
+          path: _build
+          key: cache-${{ vars.CACHE_VERSION }}-os-${{ runner.os }}-otp-${{ steps.beam-versions.outputs.otp-version }}-elixir-${{ steps.beam-versions.outputs.elixir-version }}-env-${{ env.MIX_ENV }}-mix-deps-compile-mix-lock-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+
+      - name: Compile mix dependencies
+        if: steps.mix-deps-compile-cache.outputs.cache-hit != 'true'
+        run: mix deps.compile
+
+      - name: Restore mix typecheck cache
+        id: mix-typecheck-cache
+        uses: actions/cache@v4
+        with:
+          path: priv/plts
+          key: cache-${{ vars.CACHE_VERSION }}-os-${{ runner.os }}-otp-${{ steps.beam-versions.outputs.otp-version }}-elixir-${{ steps.beam-versions.outputs.elixir-version }}-env-${{ env.MIX_ENV }}-mix-typecheck
+
+      - name: Setup typechecking
+        if: steps.mix-typecheck-cache.outputs.cache-hit != 'true'
+        run: mix typecheck.build-cache
+
+      - name: Run typecheck tasks
+        run: mix typecheck
+
+  results:
+    name: Test Matrix Results
+    runs-on: ubuntu-22.04
+
+    if: ${{ always() }}
+    needs:
+      - tests
+      - types
+
+    steps:
+      - name: Test Suite Succeeded
+        if: ${{ needs.tests.result == 'success' && needs.types.result == 'success' }}
+        run: exit 0
+
+      - name: Test Suite Failed
+        if: ${{ needs.tests.result == 'failure' || needs.types.result == 'failure' }}
+        run: exit 1

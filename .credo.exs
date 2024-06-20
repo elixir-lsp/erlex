@@ -8,6 +8,7 @@
         excluded: [
           "mix.exs",
           "_build/",
+          "deps/",
           ".git/"
         ]
       },
@@ -18,7 +19,7 @@
         {Credo.Check.Readability.MaxLineLength, false},
         {Credo.Check.Readability.PreferImplicitTry, false},
         {Credo.Check.Refactor.ABCSize},
-        {Credo.Check.Refactor.PipeChainStart},
+        {Credo.Check.Refactor.PipeChainStart}
       ]
     }
   ]
