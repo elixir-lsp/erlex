@@ -160,7 +160,7 @@ defmodule Erlex.MixProject do
       # {:dialyxir, "~> 1.4", only: @dev_envs, runtime: false, override: true}, # Transative dependency on ErlEx
       {:excoveralls, "~> 0.18", only: :test},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
-    ] ++ deps(:credo)
+    ] ++ deps(:credo) ++ deps(:nimble_parsec)
   end
 
   defp deps(:credo) do
@@ -172,7 +172,17 @@ defmodule Erlex.MixProject do
         [{:credo, "< 1.7.0", only: @dev_envs, runtime: false}]
 
       true ->
-        [{:credo, "~> 1.7", only: @dev_envs, runtime: false}]
+        [{:credo, ">= 1.7.0", only: @dev_envs, runtime: false}]
+    end
+  end
+
+  defp deps(:nimble_parsec) do
+    cond do
+      Version.match?(@elixir_version, "< 1.12.0") ->
+        [{:nimble_parsec, "< 1.4.0", only: @dev_envs, override: true, runtime: false}]
+
+      true ->
+        [{:nimble_parsec, ">= 1.4.0", only: @dev_envs, runtime: false}]
     end
   end
 
